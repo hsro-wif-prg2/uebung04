@@ -10,8 +10,34 @@ class SetImpl<T extends Comparable<T>> implements Set<T> {
 	 */
 	@Override
 	public Iterator<T> iterator() {
-		// Iterator implementieren...
-		throw new UnsupportedOperationException();
+		return new Iterator<T>() {
+			Stack<Element> agenda = new StackImpl<>();
+
+			// >>Default Konstruktor fuer anonyme innere Klasse<<
+			{
+				if (root != null)
+					agenda.push(root);
+			}
+
+			@Override
+			public boolean hasNext() {
+				return agenda.size() > 0;
+			}
+
+			@Override
+			public T next() {
+				// First Element
+				Element e = agenda.pop();
+
+				// weitere Elemente
+				if (e.left != null)
+					agenda.push(e.left);
+				if (e.right != null)
+					agenda.push(e.right);
+
+				return e.val;
+			}
+		};
 	}
 
 	/**
@@ -97,7 +123,7 @@ class SetImpl<T extends Comparable<T>> implements Set<T> {
 			}
 		}
 
-		// nicht gefunden!
+
 		return false;
 	}
 
